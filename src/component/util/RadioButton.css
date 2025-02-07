@@ -1,0 +1,9 @@
+.radio-buttons label {
+  display: inline-block; /* Atur inline untuk elemen label */
+  margin-right: 15px; /* Mengatur jarak antar radio button */
+  margin-bottom: 0; /* Pastikan tidak ada margin bawah */
+}
+
+.radio-buttons input[type="radio"] {
+  margin-right: 5px; /* Atur jarak antara input radio dan teks */
+}

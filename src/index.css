@@ -1,0 +1,244 @@
+/* * {
+  font-family: "Barlow";
+}
+
+a div:hover {
+  background-color: #eee;
+}
+
+dialog {
+  margin-top: 20px;
+  overflow-x: auto;
+  width: calc(100% - 20px);
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.175);
+  border-radius: 0.5rem;
+  outline: 0;
+  padding: 0;
+}
+
+dialog::backdrop {
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.sidebarMenu {
+  width: 14vw;
+}
+
+.responsiveContainer {
+  margin-left: 14vw;
+}
+
+.link-decoration-none > a {
+  text-decoration: none;
+  color: initial;
+  font-weight: 500;
+}
+
+.activity-header td {
+  background-color: #e9f3fc !important;
+}
+
+.activity-item {
+  background-color: transparent;
+  border: none;
+}
+
+.activity-bold {
+  font-weight: bold;
+} */
+
+/* .percentage-input {
+  position: relative;
+  display: inline-block;
+} */
+
+/* .percentage-input input {
+  margin-right: -15px;
+}
+
+.percentage-input::after {
+  content: "%";
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 1280px) {
+  .sidebarMenu {
+    display: none;
+  }
+
+  .responsiveContainer {
+    margin-left: 0;
+  }
+} */
+
+* {
+  font-family: "Barlow";
+}
+
+a div:hover {
+  background-color: #eee;
+}
+
+dialog {
+  margin-top: 20px;
+  overflow-x: auto;
+  width: calc(100% - 20px);
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.175);
+  border-radius: 0.5rem;
+  outline: 0;
+  padding: 0;
+}
+
+dialog::backdrop {
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.sidebarMenu {
+  width: 14vw;
+  transition: transform 0.3s ease;
+}
+
+.responsiveContainer {
+  margin-left: 14vw;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* Saat sidebar tersembunyi, geser sidebar ke kiri dan perlebar container */
+.sidebar-hidden .sidebarMenu {
+  transform: translateX(-250px);
+}
+
+.sidebar-hidden .responsiveContainer {
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
+.link-decoration-none > a {
+  text-decoration: none;
+  color: initial;
+  font-weight: 500;
+}
+
+.activity-header td {
+  background-color: #e9f3fc !important;
+}
+
+.activity-item {
+  background-color: transparent;
+  border: none;
+}
+
+.activity-bold {
+  font-weight: bold;
+}
+
+.percentage-input input {
+  margin-right: -15px;
+}
+
+.percentage-input::after {
+  content: "%";
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 1280px) {
+  .sidebarMenu {
+    display: none;
+  }
+
+  .responsiveContainer {
+    margin-left: 0;
+  }
+}
+
+.autocomplete-container {
+  position: relative;
+  width: 250px; /* Sesuaikan lebar input */
+  font-family: Arial, sans-serif;
+}
+
+.autocomplete-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.autocomplete-item {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.autocomplete-item:hover {
+  background-color: #f5f5f5;
+}
+
+.autocomplete-item.no-results {
+  color: #888;
+  cursor: default;
+}
+
+.loading {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding: 10px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #888;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button.btn.btn-info {
+  background-color: transparent !important; /* Tidak ada background */
+  border: none !important; /* Menghilangkan border */
+  color: #0066ff !important; /* Warna teks primary */
+  font-weight: bold !important; /* Membuat teks bold */
+  box-shadow: none !important; /* Opsional, jika ada efek bayangan */
+}
+/* Gaya untuk mencegah teks turun ke bawah */
+.label-title {
+  white-space: nowrap; /* Mencegah teks turun ke baris baru */
+  overflow: hidden; /* Jika terlalu panjang, sembunyikan kelebihan teks */
+  text-overflow: ellipsis; /* Tambahkan tanda titik-titik jika teks terlalu panjang */
+}

@@ -1,0 +1,289 @@
+import { useState, useEffect, useRef } from "react";
+import { object, string } from "yup";
+import { API_LINK } from "../../util/Constants";
+import { validateAllInputs, validateInput } from "../../util/ValidateForm";
+import SweetAlert from "../../util/SweetAlert";
+import UseFetch from "../../util/UseFetch";
+import Button from "../../part/Button";
+import Label from "../../part/Label";
+import Input from "../../part/Input";
+import Alert from "../../part/Alert";
+import Loading from "../../part/Loading";
+import Card from "../../part/Card";
+import DropDown from "../../part/Dropdown";
+// Fungsi untuk format rupiah dengan titik pemisah ribuan dan simbol Rp.
+const formatRupiah = (angka) => {
+  return `Rp. ${new Intl.NumberFormat("id-ID", {
+    minimumFractionDigits: 0,
+  }).format(angka)}`;
+};
+
+export default function PlottingReviewerAdd({ onChangePage }) {
+  const [errors, setErrors] = useState({});
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedId, setSelectedId] = useState(null); // Menyimpan ID proposal
+  const [listProposal, setListProposal] = useState({});
+  const [listReviewer, setListReviewer] = useState({});
+  const formDataRef = useRef({
+    judulProposal: "",
+    namaReviewer: "",
+    abstrakProposal: "",
+    keywordProposal: "",
+    skemaPengabdian: "",
+    rumpunIlmu: "",
+    pohonIlmu: "",
+    cabangIlmu: "",
+    totalDana: "",
+  });
+
+  const userSchema = object({
+    judulProposal: string().required("harus dipilih"),
+    namaReviewer: string().required("harus dipilih"),
+    abstrakProposal: string(),
+    keywordProposal: string(),
+    skemaPengabdian: string(),
+    rumpunIlmu: string(),
+    pohonIlmu: string(),
+    cabangIlmu: string(),
+    totalDana: string(),
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    const validationError = validateInput(name, value, userSchema);
+    formDataRef.current[name] = value;
+    if (name === "judulProposal") {
+      setSelectedId(e.target.value);
+    }
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [validationError.name]: validationError.error,
+    }));
+  };
+
+  const fetchDataByEndpointAndParams = async (
+    endpoint,
+    params,
+    setter,
+    errorMessage
+  ) => {
+    setIsError((prevError) => ({ ...prevError, error: false }));
+    try {
+      const data = await UseFetch(endpoint, params);
+      if (data === "ERROR") {
+        throw new Error(errorMessage);
+      } else {
+        setter(data);
+      }
+    } catch (error) {
+      window.scrollTo(0, 0);
+      setIsError((prevError) => ({
+        ...prevError,
+        error: true,
+        message: error.message,
+      }));
+      setter({});
+    }
+  };
+
+  useEffect(() => {
+    fetchDataByEndpointAndParams(
+      API_LINK + "PlottingReviewer/GetListDataReviewerProposal",
+      {},
+      setListReviewer,
+      "Terjadi kesalahan: Gagal mengambil daftar karyawan."
+    );
+  }, []);
+
+  useEffect(() => {
+    fetchDataByEndpointAndParams(
+      API_LINK + "PlottingReviewer/GetListDataProposalPlottingReviewer",
+      {},
+      setListProposal,
+      "Terjadi kesalahan: Gagal mengambil daftar karyawan."
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!selectedId) return; // Jika belum ada ID, jangan fetch data
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      setIsError(false);
+
+      try {
+        const data = await UseFetch(
+          API_LINK + "PengajuanProposal/DetailPengajuanProposal",
+          {
+            id: selectedId,
+          }
+        );
+
+        if (data === "ERROR" || !data) {
+          throw new Error(
+            "Terjadi kesalahan: Gagal mengambil data pengajuan proposal."
+          );
+        }
+        formDataRef.current.abstrakProposal = data[0].abstrakProposal || "";
+        formDataRef.current.keywordProposal = data[0].keywordProposal || "";
+        formDataRef.current.skemaPengabdian = data[0].skemaPengabdian || "";
+        formDataRef.current.rumpunIlmu = data[0].rumpunIlmu || "";
+        formDataRef.current.pohonIlmu = data[0].pohonIlmu || "";
+        formDataRef.current.cabangIlmu = data[0].cabangIlmu || "";
+        formDataRef.current.totalDana = data[0].totalDana || 0;
+      } catch (error) {
+        setIsError(true);
+        console.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [selectedId]);
+
+  const handleAdd = async (e) => {
+    e.preventDefault();
+
+    const validationErrors = await validateAllInputs(
+      formDataRef.current,
+      userSchema,
+      setErrors
+    );
+
+    if (Object.values(validationErrors).every((error) => !error)) {
+      setIsLoading(true);
+      setIsError((prevError) => ({ ...prevError, error: false }));
+      setErrors({});
+
+      try {
+        const data = await UseFetch(
+          API_LINK + "PlottingReviewer/CreatePlottingReviewerProposal",
+          formDataRef.current
+        );
+
+        if (data === "ERROR") {
+          throw new Error("Terjadi kesalahan: Gagal menyimpan data reviewer.");
+        } else {
+          SweetAlert("Sukses", "Data reviewer berhasil disimpan", "success");
+          onChangePage("index");
+        }
+      } catch (error) {
+        window.scrollTo(0, 0);
+        setIsError((prevError) => ({
+          ...prevError,
+          error: true,
+          message: error.message,
+        }));
+      } finally {
+        setIsLoading(false);
+      }
+    } else window.scrollTo(0, 0);
+  };
+
+  return (
+    <>
+      {isError.error && (
+        <div className="flex-fill">
+          <Alert type="danger" message={isError.message} />
+        </div>
+      )}
+      <form onSubmit={handleAdd}>
+        <Card title="Plotting Reviewer">
+          <div className="col-lg-3">
+            <DropDown
+              forInput="judulProposal"
+              label="Judul Proposal"
+              arrData={listProposal}
+              isRequired
+              value={formDataRef.current.judulProposal}
+              onChange={handleInputChange}
+              errorMessage={errors.judulProposal}
+            />
+          </div>
+          <div className="row">
+            <div className="col-lg-3">
+              <Label
+                forLabel="keywordProposal"
+                title="Keyword Proposal"
+                data={formDataRef.current.keywordProposal}
+              />
+            </div>
+            <div className="col-lg-3">
+              <Label
+                forLabel="abstrakProposal"
+                title="Abstrak Proposal"
+                data={formDataRef.current.abstrakProposal}
+              />
+            </div>
+            <div className="col-lg-3">
+              <Label
+                forLabel="skemaPengabdian"
+                title="Skema Pengabdian"
+                data={formDataRef.current.skemaPengabdian}
+              />
+            </div>
+            <div className="col-lg-3">
+              <Label
+                forLabel="rumpunIlmu"
+                title="Rumpun Ilmu"
+                data={formDataRef.current.rumpunIlmu}
+              />
+            </div>
+            <div className="col-lg-3">
+              <Label
+                forLabel="pohonIlmu"
+                title="Pohon Ilmu"
+                data={formDataRef.current.pohonIlmu}
+              />
+            </div>
+            <div className="col-lg-3">
+              <Label
+                forLabel="cabangIlmu"
+                title="Cabang Ilmu"
+                data={formDataRef.current.cabangIlmu}
+              />
+            </div>
+            <div className="col-lg-3">
+              <Label
+                forLabel="totalDana"
+                title="Total Dana"
+                data={formatRupiah(formDataRef.current.totalDana)}
+              />
+            </div>
+          </div>
+
+          <div className="col-lg-3">
+            <DropDown
+              forInput="namaReviewer"
+              label="Nama Reviewer"
+              arrData={listReviewer}
+              isRequired
+              value={formDataRef.current.namaReviewer}
+              onChange={handleInputChange}
+              errorMessage={errors.namaReviewer}
+            />
+          </div>
+        </Card>
+
+        <div className="d-flex justify-content-start my-4">
+          <Button
+            classType="secondary me-2 px-4 py-2"
+            label="Kembali"
+            onClick={() => onChangePage("index")}
+          />
+          <Button
+            classType="primary px-4 py-2"
+            type="submit"
+            label="Simpan"
+            disabled={isLoading}
+          />
+        </div>
+
+        {isLoading && <Loading />}
+      </form>
+    </>
+  );
+}
