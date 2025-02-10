@@ -191,7 +191,6 @@ export default function MasterTemplateDokumenEdit({ onChangePage, withID }) {
         }
 
         setExistingData(allData);
-        console.log("Semua data telah diambil:", allData); // Debugging: Menampilkan semua data yang diambil
       } catch (error) {
         window.scrollTo(0, 0);
         setIsError({ error: true, message: error.message });

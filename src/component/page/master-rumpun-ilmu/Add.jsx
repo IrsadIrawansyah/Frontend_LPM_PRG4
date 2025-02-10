@@ -95,28 +95,6 @@ export default function MasterRumpunIlmuAdd({ onChangePage }) {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = await UseFetch(
-  //         API_LINK + "MasterRumpunIlmu/GetDataRumpunIlmu",
-  //         { page: 1, query: "" }
-  //       );
-
-  //       if (data === "ERROR") {
-  //         setIsError(true);
-  //       } else if (data.length > 0) {
-  //         setExistingData(data); // Menyimpan data yang ada untuk pengecekan duplikat
-  //       }
-  //     } catch (error) {
-  //       setIsError(true);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       let allData = [];

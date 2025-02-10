@@ -9,7 +9,7 @@ import Button from "../../part/Button";
 import Input from "../../part/Input";
 import FileUpload from "../../part/FileUpload";
 import Loading from "../../part/Loading";
-import Card from "../../part/Card"; // Import komponen Card
+import Card from "../../part/Card";
 
 export default function MasterInformasiAdd({ onChangePage }) {
   const [errors, setErrors] = useState({});
@@ -82,7 +82,6 @@ export default function MasterInformasiAdd({ onChangePage }) {
         }
 
         setExistingData(allData);
-        console.log("Semua data telah diambil:", allData); // Debugging: Menampilkan semua data yang diambil
       } catch (error) {
         console.error("Error fetching existing data:", error);
         setIsError({

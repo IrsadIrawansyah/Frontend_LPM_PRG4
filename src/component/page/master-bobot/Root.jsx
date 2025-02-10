@@ -1,4 +1,3 @@
-// Root.jsx
 import { useState } from "react";
 import MasterBobotIndex from "./Index";
 import MasterBobotAdd from "./Add";

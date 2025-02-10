@@ -31,23 +31,15 @@ export default function MasterSkemaPengabdianEdit({ onChangePage, withID }) {
 
   // Fungsi untuk menormalisasi input
   const normalizeAndSortString = (str) => {
-    const normalizedStr = str
-      .trim() // Menghapus spasi ekstra di awal dan akhir
-      .replace(/\s+/g, " ") // Mengganti semua spasi ganda menjadi satu
-      .toLowerCase(); // Mengubah semuanya menjadi huruf kecil
+    const normalizedStr = str.trim().replace(/\s+/g, " ").toLowerCase();
 
     // Mengurutkan kata dalam string untuk membandingkan tanpa memperhatikan urutan kata
-    return normalizedStr
-      .split(" ") // Memisahkan kata-kata
-      .sort() // Mengurutkan kata secara alfabetis
-      .join(" "); // Menggabungkan kembali kata yang sudah diurutkan
+    return normalizedStr.split(" ").sort().join(" ");
   };
 
   // Fungsi untuk memeriksa duplikat
   const isDuplicate = (namaSkemaPengabdian) => {
     const normalizedNama = normalizeAndSortString(namaSkemaPengabdian);
-    // Debugging: Cek apakah input baru sudah ada dalam data yang ada
-    console.log("Checking for duplicate:", normalizedNama);
 
     return existingData.some(
       (item) =>
@@ -75,7 +67,6 @@ export default function MasterSkemaPengabdianEdit({ onChangePage, withID }) {
     const isDuplicateData = isDuplicate(namaBaru);
 
     if (isDuplicateData) {
-      console.log("Duplicate found, preventing edit");
       // Set error pada field langsung, bukan setIsError untuk Alert
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -107,7 +98,6 @@ export default function MasterSkemaPengabdianEdit({ onChangePage, withID }) {
             "Terjadi kesalahan: Gagal menyimpan data skema pengabdian."
           );
         } else {
-          console.log("Data berhasil diupdate:", data); // Debugging: Menampilkan data yang berhasil diupdate
           SweetAlert(
             "Sukses",
             "Data skema pengabdian berhasil disimpan",
@@ -149,7 +139,6 @@ export default function MasterSkemaPengabdianEdit({ onChangePage, withID }) {
           );
         } else {
           formDataRef.current = { ...formDataRef.current, ...dataById[0] };
-          console.log("Data yang diambil untuk edit:", dataById[0]); // Debugging: Menampilkan data yang diambil untuk edit
         }
 
         // Ambil semua data skema pengabdian dari API dengan paginasi
@@ -167,7 +156,6 @@ export default function MasterSkemaPengabdianEdit({ onChangePage, withID }) {
             hasMoreData = false;
           } else if (data.length > 0) {
             allData = [...allData, ...data];
-            console.log(`Data halaman ${currentPage} diambil:`, data); // Debugging: Menampilkan data dari setiap halaman
             currentPage += 1;
             // Asumsi: Jika jumlah data yang diambil kurang dari 10, berarti sudah tidak ada data lagi
             if (data.length < 10) {
@@ -179,7 +167,6 @@ export default function MasterSkemaPengabdianEdit({ onChangePage, withID }) {
         }
 
         setExistingData(allData);
-        console.log("Semua data telah diambil:", allData); // Debugging: Menampilkan semua data yang diambil
       } catch (error) {
         setIsError({
           error: true,

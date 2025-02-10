@@ -123,11 +123,8 @@ export default function MasterReviewerEdit({ onChangePage, withID }) {
         const requestData = {
           rev_id: withID,
           kry_id: formDataRef.current.namaReviewer,
-          // skp_modif_by: "SYSTEM",
           skp_modif_date: new Date().toISOString(),
         };
-
-        console.log("Request Data:", requestData);
 
         const data = await UseFetch(
           API_LINK + "MasterReviewer/EditReviewer",
@@ -197,4 +194,3 @@ export default function MasterReviewerEdit({ onChangePage, withID }) {
     </>
   );
 }
-

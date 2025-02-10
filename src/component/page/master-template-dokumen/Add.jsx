@@ -84,7 +84,6 @@ export default function MasterTemplateDokumenAdd({ onChangePage }) {
         }
 
         setExistingData(allData);
-        console.log("Semua data telah diambil:", allData); // Debugging: Menampilkan semua data yang diambil
       } catch (error) {
         console.error("Error fetching existing data:", error);
         setIsError({
